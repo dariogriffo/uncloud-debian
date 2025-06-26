@@ -11,11 +11,9 @@
    </p>
 </h1>
 <p align="center">
- Unregistry is lightweight clustering and container orchestration tool that lets you deploy and manage web apps across cloud VMs and bare metal with minimised cluster management overhead.
+ Uncloud is a lightweight clustering and container orchestration tool that lets you deploy and manage web apps across cloud VMs and bare metal with minimised cluster management overhead. It creates a secure WireGuard mesh network between your Docker hosts and provides automatic service discovery, load balancing, ingress with HTTPS, and simple CLI commands to manage your apps.
 </p>
-<p align="center">
-The included docker pussh command (extra 's' for SSH) lets you push images straight to remote Docker servers over SSH. It transfers only the missing layers, making it fast and efficient.
-</p>
+
 # uncloud for Debian
 
 This repository contains build scripts to produce the _unofficial_ Debian packages
