@@ -1,0 +1,11 @@
+Source: uncloud
+Section: utils
+Priority: optional
+Maintainer: Dario Griffo <dariogriffo@gmail.com>
+Homepage: https://github.com/psviderski/uncloud
+Package: uncloud
+Version: uncloud_VERSION-BUILD_VERSION+DIST
+Architecture: amd64
+Depends: 
+Description: lightweight clustering and container orchestration tool that lets you deploy and manage web apps across cloud VMs and bare metal with minimised cluster management overhead.
+
