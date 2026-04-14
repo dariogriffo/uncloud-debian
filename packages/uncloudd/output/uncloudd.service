@@ -2,6 +2,7 @@
 Description=Uncloud machine daemon
 After=network-online.target
 Wants=network-online.target
+Requires=docker.service
 
 [Service]
 Type=notify
