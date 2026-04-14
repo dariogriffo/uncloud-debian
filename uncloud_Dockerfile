@@ -29,5 +29,6 @@ RUN sed -i "s/uncloud_VERSION/$uncloud_VERSION/" /output/DEBIAN/control
 RUN sed -i "s/SUPPORTED_ARCHITECTURES/$ARCH/" /output/DEBIAN/control
 
 RUN chmod 755 /output/usr/bin/uncloud
+RUN ln -s /usr/bin/uncloud /output/usr/bin/uc
 RUN chmod 755 /output/DEBIAN/postinst /output/DEBIAN/postrm
 RUN dpkg-deb --build /output /uncloud_${FULL_VERSION}.deb
