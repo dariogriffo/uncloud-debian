@@ -1,0 +1,30 @@
+ARG DEBIAN_DIST=bookworm
+FROM debian:$DEBIAN_DIST
+
+ARG uncloud_VERSION
+ARG DEBIAN_DIST
+ARG BUILD_VERSION
+ARG FULL_VERSION
+ARG ARCH
+
+RUN mkdir -p /output/usr/bin
+RUN mkdir -p /output/DEBIAN
+RUN mkdir -p /output/usr/share/doc/uncloudd/
+
+COPY build/${ARCH}/uncloudd /output/usr/bin/uncloudd
+
+COPY packages/uncloudd/output/DEBIAN/control /output/DEBIAN/
+COPY packages/uncloudd/output/changelog.Debian /output/usr/share/doc/uncloudd/
+COPY packages/uncloudd/output/copyright /output/usr/share/doc/uncloudd/
+
+RUN sed -i "s/DIST/$DEBIAN_DIST/" /output/usr/share/doc/uncloudd/changelog.Debian
+RUN sed -i "s/BUILD_VERSION/$BUILD_VERSION/" /output/usr/share/doc/uncloudd/changelog.Debian
+RUN sed -i "s/uncloud_VERSION/$uncloud_VERSION/" /output/usr/share/doc/uncloudd/changelog.Debian
+
+RUN sed -i "s/DIST/$DEBIAN_DIST/" /output/DEBIAN/control
+RUN sed -i "s/BUILD_VERSION/$BUILD_VERSION/" /output/DEBIAN/control
+RUN sed -i "s/uncloud_VERSION/$uncloud_VERSION/" /output/DEBIAN/control
+RUN sed -i "s/SUPPORTED_ARCHITECTURES/$ARCH/" /output/DEBIAN/control
+
+RUN chmod 755 /output/usr/bin/uncloudd
+RUN dpkg-deb --build /output /uncloudd_${FULL_VERSION}.deb

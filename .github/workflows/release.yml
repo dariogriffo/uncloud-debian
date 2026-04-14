@@ -11,6 +11,14 @@ on:
         description: The build version.
         type: string
         required: true
+      architecture:
+        description: Architecture to build (amd64, arm64, or 'all' for all architectures)
+        type: choice
+        default: 'all'
+        options:
+          - 'all'
+          - 'amd64'
+          - 'arm64'
 
 permissions:
   contents: write
@@ -18,20 +26,21 @@ permissions:
 jobs:
   build-uncloud:
     name: Build
-    runs-on: ubuntu-latest    
+    runs-on: ubuntu-latest
     steps:
       - name: Checkout uncloud-debian
         uses: actions/checkout@v4
 
       - name: Build uncloud
-        run: ./build.sh ${{ inputs.uncloud_version }} ${{ inputs.build_version }}
-      
-      - name: Upload uncloud Artifact
+        run: ./build.sh ${{ inputs.uncloud_version }} ${{ inputs.build_version }} ${{ inputs.architecture }}
+
+      - name: Upload Artifact
         uses: actions/upload-artifact@v4
         with:
           name: artifact
-          path: | 
+          path: |
             uncloud_*.deb
+            uncloudd_*.deb
 
 
   release-uncloud:
@@ -51,6 +60,7 @@ jobs:
           draft: true
           files: |
             uncloud_*.deb
+            uncloudd_*.deb
           name: ${{ inputs.uncloud_version }}+${{ inputs.build_version }}
-          tag_name: ${{ env.RELEASE_TAG }}
+          tag_name: ${{ inputs.uncloud_version }}-${{ inputs.build_version }}
           fail_on_unmatched_files: true

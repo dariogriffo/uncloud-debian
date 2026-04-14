@@ -2,7 +2,7 @@ Section: utils
 Priority: optional
 Maintainer: Dario Griffo <dariogriffo@gmail.com>
 Homepage: https://github.com/psviderski/uncloud
-Package: uncloud
+Package: uncloudd
 Version: uncloud_VERSION-BUILD_VERSION+DIST
 Architecture: SUPPORTED_ARCHITECTURES
-Description: lightweight clustering and container orchestration tool that lets you deploy and manage web apps across cloud VMs and bare metal with minimised cluster management overhead.
+Description: machine daemon for Uncloud, the lightweight clustering and container orchestration tool.
