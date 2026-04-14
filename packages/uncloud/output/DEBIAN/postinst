@@ -1,0 +1,28 @@
+#!/bin/bash
+set -e
+
+if [ "$1" = "configure" ]; then
+    # Generate shell completions
+    mkdir -p /usr/share/bash-completion/completions
+    /usr/bin/uncloud completion bash > /usr/share/bash-completion/completions/uncloud
+
+    mkdir -p /usr/share/zsh/vendor-completions
+    /usr/bin/uncloud completion zsh > /usr/share/zsh/vendor-completions/_uncloud
+
+    mkdir -p /usr/share/fish/vendor_completions.d
+    /usr/bin/uncloud completion fish > /usr/share/fish/vendor_completions.d/uncloud.fish
+
+    # Generate man pages
+    mkdir -p /usr/share/man/man1
+    mkdir -p /usr/share/uncloud
+    TMPDIR=$(mktemp -d)
+    (cd "$TMPDIR" && /usr/bin/uncloud docs --manual)
+    MAN_LIST=/usr/share/uncloud/man-pages.list
+    > "$MAN_LIST"
+    for f in "$TMPDIR"/*.1; do
+        name="$(basename "$f").gz"
+        gzip -9 -c "$f" > "/usr/share/man/man1/$name"
+        echo "$name" >> "$MAN_LIST"
+    done
+    rm -rf "$TMPDIR"
+fi

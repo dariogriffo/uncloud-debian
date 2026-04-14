@@ -1,0 +1,17 @@
+#!/bin/bash
+set -e
+
+if [ "$1" = "remove" ]; then
+    rm -f /usr/share/bash-completion/completions/uncloud
+    rm -f /usr/share/zsh/vendor-completions/_uncloud
+    rm -f /usr/share/fish/vendor_completions.d/uncloud.fish
+
+    MAN_LIST=/usr/share/uncloud/man-pages.list
+    if [ -f "$MAN_LIST" ]; then
+        while IFS= read -r name; do
+            rm -f "/usr/share/man/man1/$name"
+        done < "$MAN_LIST"
+        rm -f "$MAN_LIST"
+    fi
+    rmdir --ignore-fail-on-non-empty /usr/share/uncloud
+fi

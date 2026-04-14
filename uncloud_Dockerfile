@@ -14,6 +14,8 @@ RUN mkdir -p /output/usr/share/doc/uncloud/
 COPY build/${ARCH}/uncloud /output/usr/bin/uncloud
 
 COPY packages/uncloud/output/DEBIAN/control /output/DEBIAN/
+COPY packages/uncloud/output/DEBIAN/postinst /output/DEBIAN/
+COPY packages/uncloud/output/DEBIAN/postrm /output/DEBIAN/
 COPY packages/uncloud/output/changelog.Debian /output/usr/share/doc/uncloud/
 COPY packages/uncloud/output/copyright /output/usr/share/doc/uncloud/
 
@@ -27,4 +29,5 @@ RUN sed -i "s/uncloud_VERSION/$uncloud_VERSION/" /output/DEBIAN/control
 RUN sed -i "s/SUPPORTED_ARCHITECTURES/$ARCH/" /output/DEBIAN/control
 
 RUN chmod 755 /output/usr/bin/uncloud
+RUN chmod 755 /output/DEBIAN/postinst /output/DEBIAN/postrm
 RUN dpkg-deb --build /output /uncloud_${FULL_VERSION}.deb
