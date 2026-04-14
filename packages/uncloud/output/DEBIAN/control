@@ -1,7 +1,8 @@
 Section: utils
 Priority: optional
 Maintainer: Dario Griffo <dariogriffo@gmail.com>
-Homepage: https://github.com/psviderski/uncloud
+Vcs-Git: https://github.com/psviderski/uncloud
+Homepage: https://uncloud.run
 Package: uncloud
 Version: uncloud_VERSION-BUILD_VERSION+DIST
 Architecture: SUPPORTED_ARCHITECTURES

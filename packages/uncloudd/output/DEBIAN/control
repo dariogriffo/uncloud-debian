@@ -1,8 +1,14 @@
 Section: utils
 Priority: optional
 Maintainer: Dario Griffo <dariogriffo@gmail.com>
-Homepage: https://github.com/psviderski/uncloud
+Vcs-Git: https://github.com/psviderski/uncloud
+Homepage: https://uncloud.run
 Package: uncloudd
+Depends: docker.io, containerd
+Pre-Depends: adduser
 Version: uncloud_VERSION-BUILD_VERSION+DIST
 Architecture: SUPPORTED_ARCHITECTURES
-Description: machine daemon for Uncloud, the lightweight clustering and container orchestration tool.
+Description: Uncloud Daemon
+ Lightweight clustering and container orchestration tool that lets you deploy and
+ manage web apps across cloud VMs and bare metal with minimised cluster management overhead.
+ 
