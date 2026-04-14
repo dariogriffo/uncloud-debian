@@ -1,0 +1,24 @@
+[Unit]
+Description=Uncloud machine daemon
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=notify
+ExecStart=/usr/bin/uncloudd
+TimeoutStartSec=15
+Restart=always
+RestartSec=2
+
+# Hardening options.
+NoNewPrivileges=true
+ProtectSystem=full
+ProtectControlGroups=true
+ProtectHome=read-only
+ProtectKernelTunables=true
+PrivateTmp=true
+RestrictAddressFamilies=AF_INET AF_INET6 AF_UNIX AF_NETLINK
+RestrictNamespaces=true
+
+[Install]
+WantedBy=multi-user.target

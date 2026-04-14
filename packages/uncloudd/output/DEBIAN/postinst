@@ -1,0 +1,8 @@
+#!/bin/bash
+set -e
+
+if [ "$1" = "configure" ]; then
+    systemctl daemon-reload
+    systemctl enable uncloudd.service
+    systemctl start uncloudd.service || true
+fi
