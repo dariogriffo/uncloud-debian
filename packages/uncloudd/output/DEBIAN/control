@@ -4,7 +4,7 @@ Maintainer: Dario Griffo <dariogriffo@gmail.com>
 Vcs-Git: https://github.com/psviderski/uncloud
 Homepage: https://uncloud.run
 Package: uncloudd
-Depends: docker-ce | docker.io, containerd.io | containerd
+Depends: docker-ce | docker.io, containerd.io | containerd, uncloud-corrosion
 Pre-Depends: adduser
 Version: uncloud_VERSION-BUILD_VERSION+DIST
 Architecture: SUPPORTED_ARCHITECTURES
