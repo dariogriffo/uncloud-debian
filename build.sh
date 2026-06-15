@@ -4,3 +4,4 @@ ARCH=${3:-amd64}
 
 ./build_uncloud_debian.sh $1 $2 $3
 ./build_uncloud_ubuntu.sh $1 $2 $3
+./build_src.sh $1 $2

@@ -1,0 +1,25 @@
+Source: uncloud
+Section: utils
+Priority: optional
+Maintainer: Dario Griffo <dariogriffo@gmail.com>
+Build-Depends: debhelper-compat (= 13), wget, ca-certificates
+Standards-Version: 4.6.2
+Homepage: https://uncloud.run
+Rules-Requires-Root: no
+
+Package: uncloud
+Architecture: amd64 arm64
+Depends: ${misc:Depends}
+Description: Lightweight container orchestration tool for cloud VMs and bare metal
+ uncloud is a lightweight clustering and container orchestration tool that lets
+ you deploy and manage web apps across cloud VMs and bare metal with minimised
+ cluster management overhead.
+
+Package: uncloudd
+Architecture: amd64 arm64
+Depends: ${misc:Depends}, docker-ce | docker.io, containerd.io | containerd, uncloud-corrosion
+Pre-Depends: adduser
+Description: Uncloud daemon
+ The uncloud machine daemon for lightweight clustering and container
+ orchestration. Lets you deploy and manage web apps across cloud VMs and bare
+ metal with minimised cluster management overhead.
