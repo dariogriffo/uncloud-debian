@@ -8,7 +8,7 @@ RUN git clone https://github.com/psviderski/uncloud.git
 
 # Download and cache dependencies and only redownload them in subsequent builds if they change.
 
-RUN cd uncloud && go mod download && go mod verify && go build -o uc ./cmd/uncloud
+RUN cd uncloud && go mod download && go mod verify && go build -o uc ./cmd/uc
 
 FROM buildpack-deps:$DEBIAN_DIST
 

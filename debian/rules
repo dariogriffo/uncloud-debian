@@ -14,29 +14,26 @@ override_dh_auto_build:
 		arm64) RELEASE_ARCH="arm64" ;; \
 		*) echo "Unsupported architecture: $$arch"; exit 1 ;; \
 	esac; \
-	echo "Downloading uncloud_linux_$${RELEASE_ARCH}.tar.gz for $(UNCLOUD_VERSION)..."; \
-	wget -q "https://github.com/psviderski/uncloud/releases/download/v$(UNCLOUD_VERSION)/uncloud_linux_$${RELEASE_ARCH}.tar.gz"; \
-	tar -xf "uncloud_linux_$${RELEASE_ARCH}.tar.gz"; \
-	rm -f "uncloud_linux_$${RELEASE_ARCH}.tar.gz"; \
+	mkdir -p "build/$${RELEASE_ARCH}"; \
+	echo "Downloading uc_linux_$${RELEASE_ARCH}.tar.gz for $(UNCLOUD_VERSION)..."; \
+	wget -q "https://github.com/psviderski/uncloud/releases/download/v$(UNCLOUD_VERSION)/uc_linux_$${RELEASE_ARCH}.tar.gz"; \
+	tar -xf "uc_linux_$${RELEASE_ARCH}.tar.gz" -C "build/$${RELEASE_ARCH}"; \
+	rm -f "uc_linux_$${RELEASE_ARCH}.tar.gz"; \
 	echo "$${RELEASE_ARCH}" > .uncloud_arch; \
 	echo "Downloading uncloudd_linux_$${RELEASE_ARCH}.tar.gz for $(UNCLOUD_VERSION)..."; \
 	wget -q "https://github.com/psviderski/uncloud/releases/download/v$(UNCLOUD_VERSION)/uncloudd_linux_$${RELEASE_ARCH}.tar.gz"; \
-	tar -xf "uncloudd_linux_$${RELEASE_ARCH}.tar.gz"; \
+	tar -xf "uncloudd_linux_$${RELEASE_ARCH}.tar.gz" -C "build/$${RELEASE_ARCH}"; \
 	rm -f "uncloudd_linux_$${RELEASE_ARCH}.tar.gz"
 
 override_dh_auto_install:
 	@RELEASE_ARCH=$$(cat .uncloud_arch); \
-	install -D -m 755 "uncloud_linux_$${RELEASE_ARCH}/uncloud" debian/uncloud/usr/bin/uncloud; \
-	ln -sf /usr/bin/uncloud debian/uncloud/usr/bin/uc; \
-	install -D -m 755 "uncloudd_linux_$${RELEASE_ARCH}/uncloudd" debian/uncloudd/usr/bin/uncloudd
+	install -D -m 755 "build/$${RELEASE_ARCH}/uc" debian/uncloud/usr/bin/uc; \
+	install -D -m 755 "build/$${RELEASE_ARCH}/uncloudd" debian/uncloudd/usr/bin/uncloudd
 
 override_dh_auto_test:
 
 override_dh_auto_clean:
-	@if [ -f .uncloud_arch ]; then \
-		RELEASE_ARCH=$$(cat .uncloud_arch); \
-		rm -rf "uncloud_linux_$${RELEASE_ARCH}" "uncloudd_linux_$${RELEASE_ARCH}" .uncloud_arch || true; \
-	fi
+	@rm -rf build .uncloud_arch || true
 
 override_dh_strip:
 

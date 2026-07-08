@@ -17,7 +17,8 @@ Description: Lightweight container orchestration tool for cloud VMs and bare met
 
 Package: uncloudd
 Architecture: amd64 arm64
-Depends: ${misc:Depends}, docker-ce | docker.io, containerd.io | containerd, uncloud-corrosion
+Depends: ${misc:Depends}, docker-ce | docker.io, containerd.io | containerd
+Conflicts: uncloud-corrosion
 Pre-Depends: adduser
 Description: Uncloud daemon
  The uncloud machine daemon for lightweight clustering and container

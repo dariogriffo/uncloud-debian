@@ -44,14 +44,14 @@ build_architecture() {
         FULL_VERSION="$uncloud_VERSION-${BUILD_VERSION}+${dist}_${build_arch}_ubu"
         echo "  Building uncloud $FULL_VERSION"
 
-        rm -f "uncloud_linux_${release_arch}.tar.gz"
-        if ! wget "https://github.com/psviderski/uncloud/releases/download/v${uncloud_VERSION}/uncloud_linux_${release_arch}.tar.gz"; then
-            echo "❌ Failed to download uncloud binary for $build_arch"
+        rm -f "uc_linux_${release_arch}.tar.gz"
+        if ! wget "https://github.com/psviderski/uncloud/releases/download/v${uncloud_VERSION}/uc_linux_${release_arch}.tar.gz"; then
+            echo "❌ Failed to download uc binary for $build_arch"
             return 1
         fi
         mkdir -p "build/${build_arch}"
-        tar -xzf "uncloud_linux_${release_arch}.tar.gz" -C "build/${build_arch}"
-        rm -f "uncloud_linux_${release_arch}.tar.gz"
+        tar -xzf "uc_linux_${release_arch}.tar.gz" -C "build/${build_arch}"
+        rm -f "uc_linux_${release_arch}.tar.gz"
 
         if ! docker build . -f uncloud_Dockerfile.ubu -t "uncloud-ubuntu-$dist-$build_arch" \
             --build-arg uncloud_VERSION="$uncloud_VERSION" \

@@ -6,4 +6,12 @@ if [ "$1" = "configure" ]; then
     systemctl daemon-reload
     systemctl enable uncloudd.service
     systemctl start uncloudd.service || true
+
+    echo ""
+    echo "================================================================"
+    echo " WARNING: This release of uncloud contains breaking changes."
+    echo " Please refer to the uncloud release notes before proceeding:"
+    echo " https://github.com/psviderski/uncloud/releases"
+    echo "================================================================"
+    echo ""
 fi
