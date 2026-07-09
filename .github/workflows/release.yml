@@ -65,7 +65,7 @@ jobs:
             uncloud_*.debian.tar.xz
 
   release-uncloud:
-    name: (Draft-)Release uncloud for Debian
+    name: Release uncloud for Debian
     if: github.event_name == 'workflow_dispatch' && github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
     needs: [build-uncloud, build-src]
@@ -80,10 +80,10 @@ jobs:
         with:
           name: source-artifact
 
-      - name: Publish Release Draft
+      - name: Publish Release
         uses: softprops/action-gh-release@v2
         with:
-          draft: true
+          draft: false
           files: |
             uncloud_*.deb
             uncloudd_*.deb
@@ -91,5 +91,5 @@ jobs:
             uncloud_*.orig.tar.gz
             uncloud_*.debian.tar.xz
           name: ${{ inputs.uncloud_version }}+${{ inputs.build_version }}
-          tag_name: ${{ inputs.uncloud_version }}-${{ inputs.build_version }}
+          tag_name: ${{ inputs.uncloud_version }}+${{ inputs.build_version }}
           fail_on_unmatched_files: true
