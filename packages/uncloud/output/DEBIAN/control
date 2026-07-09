@@ -4,6 +4,6 @@ Maintainer: Dario Griffo <dariogriffo@gmail.com>
 Vcs-Git: https://github.com/psviderski/uncloud
 Homepage: https://uncloud.run
 Package: uncloud
-Version: uncloud_VERSION-BUILD_VERSION+DIST
+Version: uncloud_VERSION-BUILD_VERSION~DIST
 Architecture: SUPPORTED_ARCHITECTURES
 Description: lightweight clustering and container orchestration tool that lets you deploy and manage web apps across cloud VMs and bare metal with minimised cluster management overhead.

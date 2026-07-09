@@ -41,7 +41,7 @@ build_architecture() {
     declare -a arr=("bookworm" "trixie" "forky" "sid")
 
     for dist in "${arr[@]}"; do
-        FULL_VERSION="$uncloud_VERSION-${BUILD_VERSION}+${dist}_${build_arch}"
+        FULL_VERSION="$uncloud_VERSION-${BUILD_VERSION}~${dist}_${build_arch}"
         echo "  Building uncloud $FULL_VERSION"
 
         rm -f "uc_linux_${release_arch}.tar.gz"

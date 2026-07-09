@@ -7,7 +7,7 @@ Package: uncloudd
 Depends: docker-ce | docker.io, containerd.io | containerd
 Conflicts: uncloud-corrosion
 Pre-Depends: adduser
-Version: uncloud_VERSION-BUILD_VERSION+DIST
+Version: uncloud_VERSION-BUILD_VERSION~DIST
 Architecture: SUPPORTED_ARCHITECTURES
 Description: Uncloud Daemon
  Lightweight clustering and container orchestration tool that lets you deploy and
