@@ -31,6 +31,11 @@ jobs:
       - name: Checkout uncloud-debian
         uses: actions/checkout@v4
 
+      - name: Validate upstream license permits paid distribution
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: ./validate_license.sh ${{ inputs.uncloud_version }}
+
       - name: Build uncloud
         run: ./build.sh ${{ inputs.uncloud_version }} ${{ inputs.build_version }} ${{ inputs.architecture }}
 
