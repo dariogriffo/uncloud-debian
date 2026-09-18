@@ -2,6 +2,6 @@
 set -e
 
 if [ "$1" = "remove" ] || [ "$1" = "upgrade" ]; then
-    systemctl stop uncloudd.service || true
-    systemctl disable uncloudd.service || true
+    systemctl stop uncloud.service uncloud.socket || true
+    systemctl disable uncloud.service uncloud.socket || true
 fi

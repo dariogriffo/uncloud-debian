@@ -1,8 +1,8 @@
 [Unit]
 Description=Uncloud machine daemon
-After=network-online.target
+Requires=uncloud.socket
+After=network-online.target uncloud.socket docker.service
 Wants=network-online.target
-Requires=docker.service
 
 [Service]
 Type=notify

@@ -4,8 +4,14 @@ set -e
 if [ "$1" = "configure" ]; then
     adduser --system --home /var/lib/uncloud --shell /usr/sbin/nologin --group uncloud || true
     systemctl daemon-reload
-    systemctl enable uncloudd.service
-    systemctl start uncloudd.service || true
+
+    # Releases before the upstream socket-activation change shipped the unit as
+    # uncloudd.service. Upstream (and `uc machine logs`) use uncloud.service, so
+    # drop any leftover enablement of the old name.
+    rm -f /etc/systemd/system/multi-user.target.wants/uncloudd.service
+
+    systemctl enable uncloud.socket uncloud.service
+    systemctl start uncloud.socket uncloud.service || true
 
     echo ""
     echo "================================================================"

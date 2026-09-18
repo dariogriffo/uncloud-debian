@@ -19,7 +19,8 @@ COPY packages/uncloudd/output/DEBIAN/postinst /output/DEBIAN/
 COPY packages/uncloudd/output/DEBIAN/prerm /output/DEBIAN/
 COPY packages/uncloudd/output/changelog.Debian /output/usr/share/doc/uncloudd/
 COPY packages/uncloudd/output/copyright /output/usr/share/doc/uncloudd/
-COPY packages/uncloudd/output/uncloudd.service /output/lib/systemd/system/
+COPY packages/uncloudd/output/uncloud.service /output/lib/systemd/system/
+COPY packages/uncloudd/output/uncloud.socket /output/lib/systemd/system/
 
 RUN sed -i "s/DIST/$UBUNTU_DIST/" /output/usr/share/doc/uncloudd/changelog.Debian
 RUN sed -i "s/BUILD_VERSION/$BUILD_VERSION/" /output/usr/share/doc/uncloudd/changelog.Debian
@@ -32,4 +33,5 @@ RUN sed -i "s/SUPPORTED_ARCHITECTURES/$ARCH/" /output/DEBIAN/control
 
 RUN chmod 755 /output/usr/bin/uncloudd
 RUN chmod 755 /output/DEBIAN/postinst /output/DEBIAN/prerm
+RUN chmod 644 /output/lib/systemd/system/uncloud.service /output/lib/systemd/system/uncloud.socket
 RUN dpkg-deb --build /output /uncloudd_${FULL_VERSION}.deb
