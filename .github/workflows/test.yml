@@ -1,25 +1,32 @@
-name: Test license gate
+name: Test license gate and download verification
 
 on:
   push:
     paths:
       - validate_license.sh
       - test_validate_license.sh
+      - verify_download.sh
+      - test_verify_download.sh
       - .github/workflows/test.yml
   pull_request:
     paths:
       - validate_license.sh
       - test_validate_license.sh
+      - verify_download.sh
+      - test_verify_download.sh
       - .github/workflows/test.yml
   workflow_dispatch:
 
 jobs:
   test:
-    name: Run license-gate tests
+    name: Run license-gate and verification tests
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Run tests
+      - name: Run license-gate tests
         run: ./test_validate_license.sh
+
+      - name: Run download-verification tests
+        run: ./test_verify_download.sh

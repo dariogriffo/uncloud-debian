@@ -37,6 +37,10 @@ jobs:
         run: ./validate_license.sh ${{ inputs.uncloud_version }}
 
       - name: Build uncloud
+        # GH_TOKEN lets verify_download.sh query the attestation API without
+        # hitting the anonymous rate limit; gh is preinstalled on the runner.
+        env:
+          GH_TOKEN: ${{ github.token }}
         run: ./build.sh ${{ inputs.uncloud_version }} ${{ inputs.build_version }} ${{ inputs.architecture }}
 
       - name: Upload Artifact

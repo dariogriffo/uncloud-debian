@@ -49,6 +49,18 @@ build_architecture() {
             echo "❌ Failed to download uc binary for $build_arch"
             return 1
         fi
+
+        # Verify before unpacking -- an unchecked tarball must never reach the
+        # packaging step. The upstream repo is read from debian/copyright.
+        if ! ./verify_download.sh \
+            --tag "v${uncloud_VERSION}" \
+            --require-checksum \
+            "uc_linux_${release_arch}.tar.gz"; then
+            echo "❌ Verification failed for uc_linux_${release_arch}.tar.gz; refusing to package it"
+            rm -f "uc_linux_${release_arch}.tar.gz"
+            return 1
+        fi
+
         mkdir -p "build/${build_arch}"
         tar -xzf "uc_linux_${release_arch}.tar.gz" -C "build/${build_arch}"
         rm -f "uc_linux_${release_arch}.tar.gz"
@@ -76,6 +88,18 @@ build_architecture() {
             echo "❌ Failed to download uncloudd binary for $build_arch"
             return 1
         fi
+
+        # Verify before unpacking -- an unchecked tarball must never reach the
+        # packaging step. The upstream repo is read from debian/copyright.
+        if ! ./verify_download.sh \
+            --tag "v${uncloud_VERSION}" \
+            --require-checksum \
+            "uncloudd_linux_${release_arch}.tar.gz"; then
+            echo "❌ Verification failed for uncloudd_linux_${release_arch}.tar.gz; refusing to package it"
+            rm -f "uncloudd_linux_${release_arch}.tar.gz"
+            return 1
+        fi
+
         mkdir -p "build/${build_arch}"
         tar -xzf "uncloudd_linux_${release_arch}.tar.gz" -C "build/${build_arch}"
         rm -f "uncloudd_linux_${release_arch}.tar.gz"
