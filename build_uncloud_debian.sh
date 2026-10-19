@@ -38,88 +38,85 @@ build_architecture() {
 
     echo "Building for architecture: $build_arch"
 
-    declare -a arr=("bookworm" "trixie" "forky" "sid")
+    # One uncloud and one uncloudd per architecture for every suite: upstream
+    # ships one static binary each, so only the old ~<suite> version suffix ever
+    # differed. The fixed ~griffo keeps them below the distro's own build.
+    FULL_VERSION="$uncloud_VERSION-${BUILD_VERSION}~griffo_${build_arch}"
+    echo "  Building uncloud $FULL_VERSION"
 
-    for dist in "${arr[@]}"; do
-        FULL_VERSION="$uncloud_VERSION-${BUILD_VERSION}~${dist}_${build_arch}"
-        echo "  Building uncloud $FULL_VERSION"
+    rm -f "uc_linux_${release_arch}.tar.gz"
+    if ! wget "https://github.com/psviderski/uncloud/releases/download/v${uncloud_VERSION}/uc_linux_${release_arch}.tar.gz"; then
+        echo "❌ Failed to download uc binary for $build_arch"
+        return 1
+    fi
 
+    # Verify before unpacking -- an unchecked tarball must never reach the
+    # packaging step. The upstream repo is read from debian/copyright.
+    if ! ./verify_download.sh \
+        --tag "v${uncloud_VERSION}" \
+        --require-checksum \
+        "uc_linux_${release_arch}.tar.gz"; then
+        echo "❌ Verification failed for uc_linux_${release_arch}.tar.gz; refusing to package it"
         rm -f "uc_linux_${release_arch}.tar.gz"
-        if ! wget "https://github.com/psviderski/uncloud/releases/download/v${uncloud_VERSION}/uc_linux_${release_arch}.tar.gz"; then
-            echo "❌ Failed to download uc binary for $build_arch"
-            return 1
-        fi
+        return 1
+    fi
 
-        # Verify before unpacking -- an unchecked tarball must never reach the
-        # packaging step. The upstream repo is read from debian/copyright.
-        if ! ./verify_download.sh \
-            --tag "v${uncloud_VERSION}" \
-            --require-checksum \
-            "uc_linux_${release_arch}.tar.gz"; then
-            echo "❌ Verification failed for uc_linux_${release_arch}.tar.gz; refusing to package it"
-            rm -f "uc_linux_${release_arch}.tar.gz"
-            return 1
-        fi
+    mkdir -p "build/${build_arch}"
+    tar -xzf "uc_linux_${release_arch}.tar.gz" -C "build/${build_arch}"
+    rm -f "uc_linux_${release_arch}.tar.gz"
 
-        mkdir -p "build/${build_arch}"
-        tar -xzf "uc_linux_${release_arch}.tar.gz" -C "build/${build_arch}"
-        rm -f "uc_linux_${release_arch}.tar.gz"
-
-        if ! docker build . -f uncloud_Dockerfile -t "uncloud-$dist-$build_arch" \
-            --build-arg uncloud_VERSION="$uncloud_VERSION" \
-            --build-arg DEBIAN_DIST="$dist" \
-            --build-arg BUILD_VERSION="$BUILD_VERSION" \
-            --build-arg FULL_VERSION="$FULL_VERSION" \
-            --build-arg ARCH="$build_arch"; then
-            echo "❌ Failed to build Docker image for uncloud $dist on $build_arch"
-            rm -rf "build/${build_arch}"
-            return 1
-        fi
-
-        id="$(docker create "uncloud-$dist-$build_arch")"
-        docker cp "$id:/uncloud_$FULL_VERSION.deb" - > "./uncloud_$FULL_VERSION.deb"
-        tar -xf "./uncloud_$FULL_VERSION.deb"
+    if ! docker build . -f uncloud_Dockerfile -t "uncloud-$build_arch" \
+        --build-arg uncloud_VERSION="$uncloud_VERSION" \
+        --build-arg BUILD_VERSION="$BUILD_VERSION" \
+        --build-arg FULL_VERSION="$FULL_VERSION" \
+        --build-arg ARCH="$build_arch"; then
+        echo "❌ Failed to build Docker image for uncloud on $build_arch"
         rm -rf "build/${build_arch}"
+        return 1
+    fi
 
-        echo "  Building uncloudd $FULL_VERSION"
+    id="$(docker create "uncloud-$build_arch")"
+    docker cp "$id:/uncloud_$FULL_VERSION.deb" - > "./uncloud_$FULL_VERSION.deb"
+    tar -xf "./uncloud_$FULL_VERSION.deb"
+    rm -rf "build/${build_arch}"
 
+    echo "  Building uncloudd $FULL_VERSION"
+
+    rm -f "uncloudd_linux_${release_arch}.tar.gz"
+    if ! wget "https://github.com/psviderski/uncloud/releases/download/v${uncloud_VERSION}/uncloudd_linux_${release_arch}.tar.gz"; then
+        echo "❌ Failed to download uncloudd binary for $build_arch"
+        return 1
+    fi
+
+    # Verify before unpacking -- an unchecked tarball must never reach the
+    # packaging step. The upstream repo is read from debian/copyright.
+    if ! ./verify_download.sh \
+        --tag "v${uncloud_VERSION}" \
+        --require-checksum \
+        "uncloudd_linux_${release_arch}.tar.gz"; then
+        echo "❌ Verification failed for uncloudd_linux_${release_arch}.tar.gz; refusing to package it"
         rm -f "uncloudd_linux_${release_arch}.tar.gz"
-        if ! wget "https://github.com/psviderski/uncloud/releases/download/v${uncloud_VERSION}/uncloudd_linux_${release_arch}.tar.gz"; then
-            echo "❌ Failed to download uncloudd binary for $build_arch"
-            return 1
-        fi
+        return 1
+    fi
 
-        # Verify before unpacking -- an unchecked tarball must never reach the
-        # packaging step. The upstream repo is read from debian/copyright.
-        if ! ./verify_download.sh \
-            --tag "v${uncloud_VERSION}" \
-            --require-checksum \
-            "uncloudd_linux_${release_arch}.tar.gz"; then
-            echo "❌ Verification failed for uncloudd_linux_${release_arch}.tar.gz; refusing to package it"
-            rm -f "uncloudd_linux_${release_arch}.tar.gz"
-            return 1
-        fi
+    mkdir -p "build/${build_arch}"
+    tar -xzf "uncloudd_linux_${release_arch}.tar.gz" -C "build/${build_arch}"
+    rm -f "uncloudd_linux_${release_arch}.tar.gz"
 
-        mkdir -p "build/${build_arch}"
-        tar -xzf "uncloudd_linux_${release_arch}.tar.gz" -C "build/${build_arch}"
-        rm -f "uncloudd_linux_${release_arch}.tar.gz"
-
-        if ! docker build . -f uncloudd_Dockerfile -t "uncloudd-$dist-$build_arch" \
-            --build-arg uncloud_VERSION="$uncloud_VERSION" \
-            --build-arg DEBIAN_DIST="$dist" \
-            --build-arg BUILD_VERSION="$BUILD_VERSION" \
-            --build-arg FULL_VERSION="$FULL_VERSION" \
-            --build-arg ARCH="$build_arch"; then
-            echo "❌ Failed to build Docker image for uncloudd $dist on $build_arch"
-            rm -rf "build/${build_arch}"
-            return 1
-        fi
-
-        id="$(docker create "uncloudd-$dist-$build_arch")"
-        docker cp "$id:/uncloudd_$FULL_VERSION.deb" - > "./uncloudd_$FULL_VERSION.deb"
-        tar -xf "./uncloudd_$FULL_VERSION.deb"
+    if ! docker build . -f uncloudd_Dockerfile -t "uncloudd-$build_arch" \
+        --build-arg uncloud_VERSION="$uncloud_VERSION" \
+        --build-arg BUILD_VERSION="$BUILD_VERSION" \
+        --build-arg FULL_VERSION="$FULL_VERSION" \
+        --build-arg ARCH="$build_arch"; then
+        echo "❌ Failed to build Docker image for uncloudd on $build_arch"
         rm -rf "build/${build_arch}"
-    done
+        return 1
+    fi
+
+    id="$(docker create "uncloudd-$build_arch")"
+    docker cp "$id:/uncloudd_$FULL_VERSION.deb" - > "./uncloudd_$FULL_VERSION.deb"
+    tar -xf "./uncloudd_$FULL_VERSION.deb"
+    rm -rf "build/${build_arch}"
 
     echo "✅ Successfully built for $build_arch"
     return 0

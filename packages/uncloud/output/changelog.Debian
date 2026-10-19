@@ -1,4 +1,4 @@
-uncloud (BUILD_VERSION) DIST; urgency=low
+uncloud (BUILD_VERSION) stable; urgency=low
 
   * https://github.com/psviderski/uncloud/releases
 

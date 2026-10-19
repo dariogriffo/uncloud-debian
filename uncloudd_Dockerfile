@@ -1,8 +1,6 @@
-ARG DEBIAN_DIST=bookworm
-FROM debian:$DEBIAN_DIST
+FROM debian:bookworm
 
 ARG uncloud_VERSION
-ARG DEBIAN_DIST
 ARG BUILD_VERSION
 ARG FULL_VERSION
 ARG ARCH
@@ -22,11 +20,9 @@ COPY packages/uncloudd/output/copyright /output/usr/share/doc/uncloudd/
 COPY packages/uncloudd/output/uncloud.service /output/lib/systemd/system/
 COPY packages/uncloudd/output/uncloud.socket /output/lib/systemd/system/
 
-RUN sed -i "s/DIST/$DEBIAN_DIST/" /output/usr/share/doc/uncloudd/changelog.Debian
 RUN sed -i "s/BUILD_VERSION/$BUILD_VERSION/" /output/usr/share/doc/uncloudd/changelog.Debian
 RUN sed -i "s/uncloud_VERSION/$uncloud_VERSION/" /output/usr/share/doc/uncloudd/changelog.Debian
 
-RUN sed -i "s/DIST/$DEBIAN_DIST/" /output/DEBIAN/control
 RUN sed -i "s/BUILD_VERSION/$BUILD_VERSION/" /output/DEBIAN/control
 RUN sed -i "s/uncloud_VERSION/$uncloud_VERSION/" /output/DEBIAN/control
 RUN sed -i "s/SUPPORTED_ARCHITECTURES/$ARCH/" /output/DEBIAN/control
@@ -34,4 +30,4 @@ RUN sed -i "s/SUPPORTED_ARCHITECTURES/$ARCH/" /output/DEBIAN/control
 RUN chmod 755 /output/usr/bin/uncloudd
 RUN chmod 755 /output/DEBIAN/postinst /output/DEBIAN/prerm
 RUN chmod 644 /output/lib/systemd/system/uncloud.service /output/lib/systemd/system/uncloud.socket
-RUN dpkg-deb --build /output /uncloudd_${FULL_VERSION}.deb
+RUN dpkg-deb -Zxz --build /output /uncloudd_${FULL_VERSION}.deb
